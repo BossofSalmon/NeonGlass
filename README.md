@@ -7,7 +7,7 @@ Links: https://github.com/CapnKitten/Translucence, https://github.com/mwittrien/
 I hope that you like it and don't forget to star!
 
 To install:
-Open your themes folder
-Add NeonGlass.theme.css
+Open your themes folder.
+Add NeonGlass.theme.css.
 Follow install instructions for your specific platform, (Vencord, BetterDiscord).
 Enjoy!
