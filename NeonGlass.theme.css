@@ -1,0 +1,385 @@
+/**
+ * @name NeonGlass
+ * @version 1.1.0
+ * @description Sleek neon, glassy, modern Discord UI based on Translucence + micro-animations. DevilBro created the EmojiReplace code, which I have put in here for simplicity.
+ * @author chatgpt + capnkitten (based off of)
+ *
+ * @base https://github.com/CapnKitten/Translucence
+ */
+
+@import url(https://capnkitten.github.io/BetterDiscord/Themes/Translucence/css/source.css);
+@import url(https://mwittrien.github.io/BetterDiscordAddons/Themes/EmojiReplace/base/Apple.css);
+
+/* ===========================
+   CORE VARIABLES
+   =========================== */
+
+:root {
+    /* APP ELEMENTS */
+    --app-bg: url(https://static.vecteezy.com/system/resources/previews/043/255/688/non_2x/colorful-gradient-background-with-cyan-purple-tint-vector.jpg);
+    --app-blur: 32px;
+    --app-margin: 8px;
+    --app-radius: 24px;
+
+    /* HOME ICON (from ClearVision style) */
+    --home-icon: url(https://media1.tenor.com/m/brkSRbQdyoEAAAAC/hecker.gif);
+    --home-size: cover;
+
+    /* NEON ACCENT (cyan/purple blend) */
+    --accent-hue: 260;
+    --accent-saturation: 87%;
+    --accent-lightness: 31%;
+    --accent-opacity: 1;
+    --accent-text-color: hsl(0, 0%, 0%);
+
+    /* SIDEBARS AND CHAT AREA COLOR SETTINGS (glass panels) */
+    --sidebar-color: hsl(230, 40%, 5%, 0.75);
+    --main-content-color: hsl(230, 40%, 4%, 0.6);
+
+    /* MESSAGE SETTINGS (floating glass bubbles) */
+    --message-color: hsl(230, 40%, 8%, 0.7);
+    --message-radius: 14px;
+    --message-padding-top: 10px;
+    --message-padding-side: 12px;
+
+    /* REPLY HSL COLOR SETTINGS (neon purple) */
+    --reply-hue: 280;
+    --reply-saturation: 85%;
+    --reply-lightness: 65%;
+    --reply-opacity: 1;
+
+    /* TEXTAREA SETTINGS (search-bar style) */
+    --textarea-color: 10, 255, 255;
+    --textarea-alpha: 0.08;
+    --textarea-alpha-focus: 0.16;
+    --textarea-text-color: hsl(0,0%,100%);
+    --textarea-radius: 999px;
+
+    /* CARD SETTINGS (popouts, modals) */
+    --card-color: hsl(230, 40%, 6%, 0.85);
+    --card-color-hover: hsl(230, 40%, 10%, 0.9);
+    --card-color-select: hsl(230, 40%, 14%, 0.95);
+
+    /* BUTTON SETTINGS */
+    --button-height: 32px;
+    --button-padding: 0 18px;
+    --button-action-color: hsl(190, 90%, 55%);
+    --button-radius: 999px;
+}
+
+/* ===========================
+   KEYFRAMES (MICRO-ANIMATIONS)
+   =========================== */
+
+@keyframes neonPulse {
+    0% { filter: drop-shadow(0 0 6px rgba(0,255,255,0.4)); }
+    50% { filter: drop-shadow(0 0 14px rgba(0,255,255,0.9)); }
+    100% { filter: drop-shadow(0 0 6px rgba(0,255,255,0.4)); }
+}
+
+@keyframes messageSlideIn {
+    from {
+        transform: translateY(6px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes mentionPulse {
+    0% { box-shadow: 0 0 0 0 rgba(255,0,255,0.6); }
+    70% { box-shadow: 0 0 12px 6px rgba(255,0,255,0); }
+    100% { box-shadow: 0 0 0 0 rgba(255,0,255,0); }
+}
+
+@keyframes typingGlow {
+    0% { opacity: 0.4; filter: drop-shadow(0 0 4px cyan); }
+    50% { opacity: 1; filter: drop-shadow(0 0 10px cyan); }
+    100% { opacity: 0.4; filter: drop-shadow(0 0 4px cyan); }
+}
+
+@keyframes inputGlow {
+    0% { box-shadow: 0 0 0 1px rgba(0,255,255,0.4); }
+    50% { box-shadow: 0 0 12px 2px rgba(0,255,255,0.8); }
+    100% { box-shadow: 0 0 0 1px rgba(0,255,255,0.4); }
+}
+
+@keyframes popoutFade {
+    from {
+        opacity: 0;
+        transform: scale(0.92);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ===========================
+   GLOBAL NEON GLASS AESTHETIC
+   =========================== */
+
+.appMount__51fd7::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at top left, rgba(0, 255, 255, 0.18), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(255, 0, 255, 0.18), transparent 55%);
+    z-index: -1;
+}
+
+.appMount__51fd7::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at center, transparent 60%, rgba(0,0,0,0.55));
+    z-index: -1;
+}
+
+.appMount__51fd7,
+.app__160d8 {
+    box-shadow: 0 0 40px rgba(0,0,0,0.8);
+}
+
+/* ===========================
+   HOME ICON MODULE
+   =========================== */
+
+.childWrapper__6e9f8 {
+    background: rgba(0,0,0,0.35);
+    border-radius: 16px;
+    padding: 0px;
+    filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.45));
+    transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease, background 0.25s ease;
+}
+
+.childWrapper__6e9f8:hover {
+    transform: scale(1.12) rotate(1deg);
+    background: rgba(0,0,0,0.55);
+    filter: drop-shadow(0 0 16px rgba(0, 255, 255, 0.8));
+}
+
+/* Replace SVG with custom icon */
+.childWrapper__6e9f8 > svg {
+    width: 100%;
+    height: 100%;
+    background: var(--home-icon) center/var(--home-size) no-repeat;
+    object-fit: contain;
+}
+
+.childWrapper__6e9f8 path {
+    display: none;
+}
+
+/* ===========================
+   SERVER LIST (LEFT SIDEBAR)
+   =========================== */
+
+.wrapper__216eb {
+    background: transparent !important;
+}
+
+.listItem__650eb .wrapper__3af0b,
+.guilds__2b93a {
+    background: transparent !important;
+}
+
+/* Rounded server icons with neon glow + micro-animations */
+.guildIcon__2c7f8,
+.wrapper__3af0b .childWrapper__6e9f8 {
+    border-radius: 30%;
+    transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.wrapper__3af0b:hover .guildIcon__2c7f8 {
+    transform: translateY(-3px) scale(1.06);
+    filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.6));
+}
+
+.selected__7f4cb .guildIcon__2c7f8 {
+    animation: neonPulse 2.4s ease-in-out infinite;
+}
+
+/* ===========================
+   CHANNEL SIDEBAR
+   =========================== */
+
+.sidebar_ded4b5 {
+    background: rgba(5, 5, 20, 0.75) !important;
+    backdrop-filter: blur(26px) saturate(130%);
+    border-radius: 20px;
+}
+
+.mainContent__2333c,
+.name__8d1ec,
+.icon__67ab4 {
+    color: hsl(0,0%,85%) !important;
+}
+
+.modeSelected__473f1 .name__8d1ec,
+.modeSelected__473f1 .icon__67ab4 {
+    color: hsl(190, 100%, 70%) !important;
+}
+
+.modeSelected__473f1,
+.modeSelected__473f1:hover {
+    background: linear-gradient(90deg, rgba(0, 255, 255, 0.18), rgba(255, 0, 255, 0.12)) !important;
+}
+
+.modeUnreadImportant__35358:hover,
+.wrapper__7bcde:hover {
+    background: rgba(255,255,255,0.03) !important;
+}
+
+/* ===========================
+   MAIN CHAT AREA
+   =========================== */
+
+.chat__52833 {
+    background: rgba(5, 5, 15, 0.65) !important;
+    backdrop-filter: blur(28px) saturate(130%);
+    border-radius: 20px;
+}
+
+/* Messages as floating glass cards + slide-in animation */
+.messageListItem__6a4fb .message__80c10 {
+    background: rgba(10, 10, 30, 0.7);
+    backdrop-filter: blur(18px);
+    border-radius: var(--message-radius);
+    border: 1px solid rgba(0, 255, 255, 0.12);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.55);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    animation: messageSlideIn 0.25s ease;
+}
+
+.messageListItem__6a4fb .message__80c10:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.7);
+    border-color: rgba(0, 255, 255, 0.35);
+    background: rgba(15, 15, 40, 0.85);
+}
+
+/* Mentions highlight + pulse */
+.mentioned__58017 {
+    box-shadow: 0 0 0 1px rgba(255, 0, 255, 0.6);
+    background: rgba(40, 0, 60, 0.7) !important;
+    animation: mentionPulse 1.6s ease-out;
+}
+
+/* Typing indicator glow */
+.typing__6fd1d {
+    animation: typingGlow 1.4s ease-in-out infinite;
+}
+
+/* ===========================
+   INPUT / TEXTAREA
+   =========================== */
+
+.form__13a2c {
+    border-radius: 999px;
+}
+
+.textArea__74543 {
+    border-radius: var(--textarea-radius);
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 0 1px rgba(0, 255, 255, 0.25), 0 10px 30px rgba(0,0,0,0.8);
+    transition: box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.textArea__74543:focus-within {
+    background: rgba(0, 0, 0, 0.75);
+    box-shadow: 0 0 0 1px rgba(0, 255, 255, 0.7), 0 14px 40px rgba(0,0,0,0.9);
+    transform: translateY(-1px);
+    animation: inputGlow 1.8s ease-in-out infinite;
+}
+
+.placeholder__1b31f {
+    color: rgba(200, 255, 255, 0.5) !important;
+}
+
+/* ===========================
+   BUTTONS
+   =========================== */
+
+.button__581d0,
+.lookFilled__950dd {
+    border-radius: var(--button-radius) !important;
+    background: linear-gradient(135deg, rgba(0, 255, 255, 0.9), rgba(255, 0, 255, 0.9)) !important;
+    box-shadow: 0 0 18px rgba(0, 255, 255, 0.6);
+    color: var(--accent-text-color) !important;
+    border: none !important;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.button__581d0:hover,
+.lookFilled__950dd:hover {
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: 0 0 26px rgba(0, 255, 255, 0.9);
+    filter: saturate(120%);
+}
+
+.lookOutlined__46d54 {
+    border-radius: var(--button-radius) !important;
+    border: 1px solid rgba(0, 255, 255, 0.6) !important;
+    color: hsl(0,0%,90%) !important;
+    background: rgba(0,0,0,0.4) !important;
+}
+
+/* ===========================
+   POPOUTS & MODALS
+   =========================== */
+
+.layer__2efaa,
+.popout__24e32,
+.menu__5c5e8,
+.modal__6a96b {
+    background:
+        radial-gradient(circle at top left, rgba(0, 255, 255, 0.18), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(255, 0, 255, 0.18), transparent 55%),
+        rgba(5, 5, 20, 0.9) !important;
+    backdrop-filter: blur(26px) saturate(140%);
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+    border: 1px solid rgba(0, 255, 255, 0.25);
+    animation: popoutFade 0.18s ease-out;
+}
+
+/* ===========================
+   TOP BAR / TITLE BAR
+   =========================== */
+
+.titleBar__01af6,
+.container__11d72 {
+    background: linear-gradient(90deg, rgba(0,0,0,0.85), rgba(10,10,30,0.85)) !important;
+    backdrop-filter: blur(20px);
+    border-radius: 18px 18px 0 0;
+}
+
+/* ===========================
+   TEXT COLOR TUNING (VISUAL REFRESH)
+   =========================== */
+
+@supports (color:color-mix(in lch,red,blue)) {
+    .visual-refresh .theme-dark,
+    .visual-refresh.theme-dark {
+        --text-primary: hsl(0,0%,98%);
+        --text-secondary: hsl(0,0%,78%);
+        --channels-default: hsl(0,0%,70%);
+        --channel-icon: hsl(0,0%,70%);
+        --icon-primary: hsl(0,0%,96%);
+        --icon-secondary: hsl(0,0%,84%);
+        --icon-tertiary: hsl(0,0%,71%);
+        --interactive-normal: hsl(0,0%,82%);
+        --interactive-hover: hsl(0,0%,94%);
+        --interactive-active: hsl(0,0%,100%);
+        --interactive-muted: hsl(0,0%,45%);
+        --background-modifier-hover: hsl(0,0%,100%,0.06);
+        --background-modifier-selected: hsl(0,0%,100%,0.11);
+    }
+}
